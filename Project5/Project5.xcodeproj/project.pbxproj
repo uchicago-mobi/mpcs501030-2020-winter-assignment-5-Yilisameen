@@ -13,6 +13,9 @@
 		1363510823F1019E004C6291 /* PlaceMarkerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1363510723F1019E004C6291 /* PlaceMarkerView.swift */; };
 		1363510C23F105F2004C6291 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1363510B23F105F2004C6291 /* DataManager.swift */; };
 		1363511023F137E9004C6291 /* Data.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1363510F23F137E9004C6291 /* Data.plist */; };
+		1363511623F1C5DA004C6291 /* FavoritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1363511523F1C5DA004C6291 /* FavoritesViewController.swift */; };
+		1363511823F1C734004C6291 /* FavoritesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1363511723F1C734004C6291 /* FavoritesTableViewCell.swift */; };
+		1363511A23F21682004C6291 /* PlacesFavoritesDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1363511923F21682004C6291 /* PlacesFavoritesDelegate.swift */; };
 		13E93CE123EDF9E500A2081F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E93CE023EDF9E500A2081F /* AppDelegate.swift */; };
 		13E93CE323EDF9E500A2081F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E93CE223EDF9E500A2081F /* SceneDelegate.swift */; };
 		13E93CE823EDF9E500A2081F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 13E93CE623EDF9E500A2081F /* Main.storyboard */; };
@@ -27,6 +30,9 @@
 		1363510723F1019E004C6291 /* PlaceMarkerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceMarkerView.swift; sourceTree = "<group>"; };
 		1363510B23F105F2004C6291 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		1363510F23F137E9004C6291 /* Data.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Data.plist; sourceTree = "<group>"; };
+		1363511523F1C5DA004C6291 /* FavoritesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesViewController.swift; sourceTree = "<group>"; };
+		1363511723F1C734004C6291 /* FavoritesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesTableViewCell.swift; sourceTree = "<group>"; };
+		1363511923F21682004C6291 /* PlacesFavoritesDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacesFavoritesDelegate.swift; sourceTree = "<group>"; };
 		13E93CDD23EDF9E500A2081F /* Project5.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Project5.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13E93CE023EDF9E500A2081F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		13E93CE223EDF9E500A2081F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -79,10 +85,13 @@
 				13E93CE023EDF9E500A2081F /* AppDelegate.swift */,
 				13E93CE223EDF9E500A2081F /* SceneDelegate.swift */,
 				1363510323F0C32D004C6291 /* MapViewController.swift */,
+				1363511523F1C5DA004C6291 /* FavoritesViewController.swift */,
+				1363511723F1C734004C6291 /* FavoritesTableViewCell.swift */,
 				1363510523F100BD004C6291 /* Place.swift */,
 				1363510723F1019E004C6291 /* PlaceMarkerView.swift */,
 				13E93CE623EDF9E500A2081F /* Main.storyboard */,
 				1363510B23F105F2004C6291 /* DataManager.swift */,
+				1363511923F21682004C6291 /* PlacesFavoritesDelegate.swift */,
 				13E93CE923EDF9E800A2081F /* Assets.xcassets */,
 				13E93CEB23EDF9E800A2081F /* LaunchScreen.storyboard */,
 				1363510F23F137E9004C6291 /* Data.plist */,
@@ -164,9 +173,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				13E93CE123EDF9E500A2081F /* AppDelegate.swift in Sources */,
+				1363511A23F21682004C6291 /* PlacesFavoritesDelegate.swift in Sources */,
 				1363510C23F105F2004C6291 /* DataManager.swift in Sources */,
+				1363511623F1C5DA004C6291 /* FavoritesViewController.swift in Sources */,
 				13E93CE323EDF9E500A2081F /* SceneDelegate.swift in Sources */,
 				1363510823F1019E004C6291 /* PlaceMarkerView.swift in Sources */,
+				1363511823F1C734004C6291 /* FavoritesTableViewCell.swift in Sources */,
 				1363510423F0C32D004C6291 /* MapViewController.swift in Sources */,
 				1363510623F100BD004C6291 /* Place.swift in Sources */,
 			);

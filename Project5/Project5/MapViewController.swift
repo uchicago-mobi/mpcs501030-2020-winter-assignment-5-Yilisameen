@@ -14,9 +14,13 @@ class MapViewController: UIViewController {
     @IBOutlet var annotationName: UILabel!
     @IBOutlet var annotationDescription: UILabel!
     @IBOutlet var favoriteStar: UIButton!
+    @IBOutlet var displayView: UIView!
     
+    var arrayOfAnnotations = [MKAnnotation]()
     let coordinate = CLLocationCoordinate2D(latitude: 41.948287,
     longitude: -87.655697)
+    let span = MKCoordinateSpan(latitudeDelta: 0.00978871051851371, longitudeDelta: 0.008167393319212124)
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,48 +32,71 @@ class MapViewController: UIViewController {
         mapView.showsCompass = false
         mapView.pointOfInterestFilter = .excludingAll
         
-        //set the current region of the map:
-        let span = MKCoordinateSpan(latitudeDelta: 0.008167393319212124, longitudeDelta: 0.00978871051851371)
-        let region = MKCoordinateRegion(center: coordinate, span: span)
-        mapView.region = region
+//        let span = MKCoordinateSpan(latitudeDelta: 0.00978871051851371, longitudeDelta: 0.008167393319212124)
+//        let region = MKCoordinateRegion(center: coordinate, span: span)
+//        mapView.setRegion(region, animated: true)
         
         //read places from Data.plist and add annotations to mapView
-        let path = Bundle.main.path(forResource: "Data", ofType: "plist")!
-        let dict = NSDictionary(contentsOfFile: path)
-        let places = dict!.object(forKey: "places") as! [Dictionary<String, AnyObject>]
-        for place in places {
-            let coordinates = CLLocationCoordinate2DMake(place["lat"]! as! CLLocationDegrees, place["long"]! as! CLLocationDegrees)
-            let annotation = Place(name: place["name"]! as! String, description: place["description"]! as! String, coordinate: coordinates)
+        DataManager.sharedInstance.loadAnnotationFromPlist()
+        for place in DataManager.sharedInstance.dictionaryOfIntrest.values {
+            //let coordinates = place.coordinate
+            let annotation = Place(name: place.name, description: place.description, coordinate: place.coordinate)
             mapView.addAnnotation(annotation)
-            mapView.showAnnotations([annotation], animated: true)
+            arrayOfAnnotations.append(annotation)
+        }
+        print(arrayOfAnnotations)
+        mapView.showAnnotations(arrayOfAnnotations, animated: true)
+        
+        favoriteStar.addTarget(self, action: #selector(addFavorites), for: .touchUpInside)
+        
+        self.view.sendSubviewToBack(displayView)
+    }
+    
+    @objc func addFavorites(_ button: UIButton) {
+        if favoriteStar.isSelected {
+            DataManager.sharedInstance.deleteFavorite(annotationName.text!)
+            favoriteStar.isSelected = false
+        }
+        else{
+            print(annotationName.text as Any)
+            let newFavorite: PlaceInformation = DataManager.sharedInstance.dictionaryOfIntrest[annotationName.text!]!
+            DataManager.sharedInstance.saveFavorites(newFavorite)
+            favoriteStar.isSelected = true
         }
     }
     
-//    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-//        let annotation = view.annotation as? Place
-//        print(annotation?.name as Any)
-//    }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    override func viewWillAppear(_ animated: Bool) {
+        let region = MKCoordinateRegion(center: coordinate, span: span)
+        mapView.setRegion(region, animated: true)
     }
-    */
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "ToFavorites" {
+            let controller = segue.destination as! FavoritesViewController
+            controller.delegate = self
+        }
+    }
 
 }
 
 //Delegate
 extension MapViewController: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        self.view.bringSubviewToFront(displayView)
         let annotation = view.annotation as? Place
-        //print(annotation?.longDescription as Any)
         annotationName.text = annotation?.name
         annotationDescription.text = annotation?.longDescription
-        //print(annotation?.description as Any)
+        favoriteStar.isSelected = DataManager.sharedInstance.dictionaryOfFavorites[(annotation?.name)!] != nil
+    }
+}
+
+extension MapViewController: PlaceFavoritesDelegate {
+    func favoritePlace(name: String) {
+        let favoritePoint = DataManager.sharedInstance.dictionaryOfIntrest[name]
+        let region = MKCoordinateRegion(center: favoritePoint!.coordinate, span: span)
+        mapView.setRegion(region, animated: true)
+        annotationName.text = favoritePoint?.name
+        annotationDescription.text = favoritePoint?.description
         favoriteStar.isSelected = true
     }
 }
