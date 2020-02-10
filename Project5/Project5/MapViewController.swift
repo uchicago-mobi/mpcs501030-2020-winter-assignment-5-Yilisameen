@@ -11,6 +11,9 @@ import MapKit
 
 class MapViewController: UIViewController {
     @IBOutlet var mapView: MKMapView!
+    @IBOutlet var annotationName: UILabel!
+    @IBOutlet var annotationDescription: UILabel!
+    @IBOutlet var favoriteStar: UIButton!
     
     let coordinate = CLLocationCoordinate2D(latitude: 41.948287,
     longitude: -87.655697)
@@ -19,7 +22,7 @@ class MapViewController: UIViewController {
         super.viewDidLoad()
         
         //mapView's delegate
-        //mapView.delegate = self
+        mapView.delegate = self
         
         //configure the map view
         mapView.showsCompass = false
@@ -30,8 +33,22 @@ class MapViewController: UIViewController {
         let region = MKCoordinateRegion(center: coordinate, span: span)
         mapView.region = region
         
+        //read places from Data.plist and add annotations to mapView
+        let path = Bundle.main.path(forResource: "Data", ofType: "plist")!
+        let dict = NSDictionary(contentsOfFile: path)
+        let places = dict!.object(forKey: "places") as! [Dictionary<String, AnyObject>]
+        for place in places {
+            let coordinates = CLLocationCoordinate2DMake(place["lat"]! as! CLLocationDegrees, place["long"]! as! CLLocationDegrees)
+            let annotation = Place(name: place["name"]! as! String, description: place["description"]! as! String, coordinate: coordinates)
+            mapView.addAnnotation(annotation)
+            mapView.showAnnotations([annotation], animated: true)
+        }
     }
     
+//    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+//        let annotation = view.annotation as? Place
+//        print(annotation?.name as Any)
+//    }
 
     /*
     // MARK: - Navigation
@@ -44,3 +61,16 @@ class MapViewController: UIViewController {
     */
 
 }
+
+//Delegate
+extension MapViewController: MKMapViewDelegate {
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        let annotation = view.annotation as? Place
+        //print(annotation?.longDescription as Any)
+        annotationName.text = annotation?.name
+        annotationDescription.text = annotation?.longDescription
+        //print(annotation?.description as Any)
+        favoriteStar.isSelected = true
+    }
+}
+
