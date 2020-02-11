@@ -28,7 +28,9 @@ public class DataManager {
     var dictionaryOfIntrest = [String: PlaceInformation]()
     var dictionaryOfFavorites = [String: PlaceInformation]()
     //var arrOfIntrest = [PlaceInformation]()
-    var arrOfFavorites = [PlaceInformation]()
+    var arrOfFavorites = [String]()
+    
+    
     
     fileprivate init() {}
     
@@ -44,21 +46,26 @@ public class DataManager {
             dictionaryOfIntrest[intrestPoint.name] = intrestPoint
             //arrOfIntrest.append(intrestPoint)
         }
+        let defaultFavoritesList = UserDefaults.standard.stringArray(forKey: "name") ?? [String]()
+        print(defaultFavoritesList)
+        for points in defaultFavoritesList {
+            arrOfFavorites.append(points)
+            dictionaryOfFavorites[points] = dictionaryOfIntrest[points]
+        }
         
     }
     
     func saveFavorites(_ newFavorite: PlaceInformation) {
         dictionaryOfFavorites[newFavorite.name] = newFavorite
-        arrOfFavorites.append(newFavorite)
+        arrOfFavorites.append(newFavorite.name)
+        UserDefaults.standard.set(arrOfFavorites, forKey: "name")
     }
     
     func deleteFavorite(_ name: String) {
         dictionaryOfFavorites[name] = nil
-        for i in 0..<arrOfFavorites.count-1 {
-            if arrOfFavorites[i].name == name {
-                arrOfFavorites.remove(at: i)
-            }
-        }
+        let index = arrOfFavorites.firstIndex(of: name)
+        arrOfFavorites.remove(at: index!)
+        UserDefaults.standard.set(arrOfFavorites, forKey: "name")
     }
     
 }

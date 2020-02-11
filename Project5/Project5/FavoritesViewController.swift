@@ -39,12 +39,12 @@ class FavoritesViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "FavoritesTableCell", for: indexPath) as! FavoritesTableViewCell
-        cell.placeName.text = DataManager.sharedInstance.arrOfFavorites[indexPath.row].name
+        cell.placeName.text = DataManager.sharedInstance.arrOfFavorites[indexPath.row]
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let _name = DataManager.sharedInstance.arrOfFavorites[indexPath.row].name
+        let _name = DataManager.sharedInstance.arrOfFavorites[indexPath.row]
         delegate?.favoritePlace(name: _name)
         dismiss(animated: true, completion: nil)
     }

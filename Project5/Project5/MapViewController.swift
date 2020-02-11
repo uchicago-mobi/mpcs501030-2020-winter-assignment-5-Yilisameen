@@ -37,9 +37,11 @@ class MapViewController: UIViewController {
         //configure the map view
         mapView.showsCompass = false
         mapView.pointOfInterestFilter = .excludingAll
+
         
         //read places from Data.plist and add annotations to mapView
         DataManager.sharedInstance.loadAnnotationFromPlist()
+        
         for place in DataManager.sharedInstance.dictionaryOfIntrest.values {
             //let coordinates = place.coordinate
             let annotation = Place(name: place.name, description: place.description, coordinate: place.coordinate)
@@ -53,6 +55,11 @@ class MapViewController: UIViewController {
         self.view.sendSubviewToBack(displayView)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        let region = MKCoordinateRegion(center: coordinate, span: span)
+        mapView.setRegion(region, animated: true)
+    }
+    
     @objc func addFavorites(_ button: UIButton) {
         if favoriteStar.isSelected {
             DataManager.sharedInstance.deleteFavorite(annotationName.text!)
@@ -63,11 +70,6 @@ class MapViewController: UIViewController {
             DataManager.sharedInstance.saveFavorites(newFavorite)
             favoriteStar.isSelected = true
         }
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        let region = MKCoordinateRegion(center: coordinate, span: span)
-        mapView.setRegion(region, animated: true)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -88,6 +90,28 @@ extension MapViewController: MKMapViewDelegate {
         annotationDescription.text = annotation?.longDescription
         favoriteStar.isSelected = DataManager.sharedInstance.dictionaryOfFavorites[(annotation?.name)!] != nil
     }
+    
+    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        print("Tapped a callout")
+    }
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        if let annotation = annotation as? Place {
+            let identifier = "CustomPin"
+            
+            var view: PlaceMarkerView
+            
+            if let dequeuedView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? PlaceMarkerView {
+                dequeuedView.annotation = annotation
+                view = dequeuedView
+            } else {
+                view = PlaceMarkerView(annotation: annotation, reuseIdentifier: identifier)
+            }
+            return view
+        }
+        return nil
+    }
+    
 }
 
 extension MapViewController: PlaceFavoritesDelegate {

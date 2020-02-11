@@ -14,7 +14,8 @@ class PlaceMarkerView: MKMarkerAnnotationView {
         willSet {
             clusteringIdentifier = "Place"
             displayPriority = .defaultLow
-            markerTintColor = .systemRed
+            markerTintColor = .systemPink
+            glyphText = "❤︎"
         }
     }
     
