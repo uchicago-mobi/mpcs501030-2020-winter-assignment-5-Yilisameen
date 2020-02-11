@@ -20,10 +20,16 @@ class MapViewController: UIViewController {
     let coordinate = CLLocationCoordinate2D(latitude: 41.948287,
     longitude: -87.655697)
     let span = MKCoordinateSpan(latitudeDelta: 0.00978871051851371, longitudeDelta: 0.008167393319212124)
+    let locationManager = CLLocationManager()
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Request authorization and
+        // set the view controller as the location manager's delegate
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.delegate = self
         
         //mapView's delegate
         mapView.delegate = self
@@ -31,10 +37,6 @@ class MapViewController: UIViewController {
         //configure the map view
         mapView.showsCompass = false
         mapView.pointOfInterestFilter = .excludingAll
-        
-//        let span = MKCoordinateSpan(latitudeDelta: 0.00978871051851371, longitudeDelta: 0.008167393319212124)
-//        let region = MKCoordinateRegion(center: coordinate, span: span)
-//        mapView.setRegion(region, animated: true)
         
         //read places from Data.plist and add annotations to mapView
         DataManager.sharedInstance.loadAnnotationFromPlist()
@@ -44,7 +46,6 @@ class MapViewController: UIViewController {
             mapView.addAnnotation(annotation)
             arrayOfAnnotations.append(annotation)
         }
-        print(arrayOfAnnotations)
         mapView.showAnnotations(arrayOfAnnotations, animated: true)
         
         favoriteStar.addTarget(self, action: #selector(addFavorites), for: .touchUpInside)
@@ -58,7 +59,6 @@ class MapViewController: UIViewController {
             favoriteStar.isSelected = false
         }
         else{
-            print(annotationName.text as Any)
             let newFavorite: PlaceInformation = DataManager.sharedInstance.dictionaryOfIntrest[annotationName.text!]!
             DataManager.sharedInstance.saveFavorites(newFavorite)
             favoriteStar.isSelected = true
@@ -98,6 +98,20 @@ extension MapViewController: PlaceFavoritesDelegate {
         annotationName.text = favoritePoint?.name
         annotationDescription.text = favoritePoint?.description
         favoriteStar.isSelected = true
+    }
+}
+
+extension MapViewController: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager,
+                         didChangeAuthorization status: CLAuthorizationStatus) {
+        switch status {
+        case .authorizedAlways, .authorizedWhenInUse:
+            print("Authorized!")
+        case .notDetermined:
+            print("We need to request authorization")
+        default:
+            print("Not authorized :(")
+        }
     }
 }
 
